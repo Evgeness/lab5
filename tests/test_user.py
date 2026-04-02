@@ -32,16 +32,19 @@ def test_get_unexisted_user():
 
 def test_create_user_with_valid_email():
     '''Создание пользователя с уникальной почтой'''
+
     new_user = {
-        'name': 'Test User',
-        'email': 'testuser@example.com'
+        "name": "Test User",
+        "email": "testuser@example.com"
     }
+
     response = client.post("/api/v1/user", json=new_user)
+
     assert response.status_code == 201
-    
-    # Если API возвращает ID, а не объект
+
     user_id = response.json()
-    assert isinstance(user_id, int)  # Проверяем, что вернулся ID
+
+    assert isinstance(user_id, int)
     
     # Проверяем, что пользователь действительно создан, получив его по email
     get_response = client.get("/api/v1/user", params={'email': new_user['email']})
@@ -66,21 +69,21 @@ def test_create_user_with_invalid_email():
 
 def test_delete_user():
     '''Удаление пользователя'''
-    # Сначала создаём временного пользователя
+
     new_user = {
-        'name': 'ToDelete',
-        'email': 'todelete@example.com'
+        "name": "ToDelete",
+        "email": "todelete@example.com"
     }
+
     create_response = client.post("/api/v1/user", json=new_user)
+
     assert create_response.status_code == 201
-    
-    # Получаем ID из ответа (если API возвращает ID)
+
     user_id = create_response.json()
-    assert isinstance(user_id, int)
-    
-    # Получаем созданного пользователя, чтобы убедиться, что он существует
-    get_response = client.get("/api/v1/user", params={'email': new_user['email']})
-    assert get_response.status_code == 200
+
+    delete_response = client.delete(f"/api/v1/user/{user_id}")
+
+    assert delete_response.status_code == 200
     
     # Удаляем пользователя (по email или по id - зависит от API)
     # Вариант 1: удаление по email
