@@ -74,6 +74,7 @@ def test_create_user_with_valid_email():
 
 def test_delete_user():
     '''Удаление пользователя'''
+
     new_user = {
         "name": "ToDelete",
         "email": "todelete@example.com"
@@ -82,10 +83,10 @@ def test_delete_user():
     # Создаём пользователя
     create_response = client.post("/api/v1/user", json=new_user)
     assert create_response.status_code == 201
-    user_id = create_response.json()  # <- возвращается int
+    user_id = create_response.json()  # возвращается int, можно хранить, но удаление идёт по email
 
-    # Удаляем пользователя по path-параметру
-    delete_response = client.delete(f"/api/v1/user/{user_id}")
+    # Удаляем пользователя по email (query-параметр)
+    delete_response = client.delete("/api/v1/user", params={'email': new_user['email']})
     assert delete_response.status_code == 204  # No Content
 
     # Проверяем, что пользователя больше нет
