@@ -81,7 +81,7 @@ def test_delete_user():
 
     user_id = create_response.json()
 
-    delete_response = client.delete(f"/api/v1/user/{user_id}")
+    delete_response = client.delete(f"/api/v1/user?id={user_id}")
 
     assert delete_response.status_code == 200
     
